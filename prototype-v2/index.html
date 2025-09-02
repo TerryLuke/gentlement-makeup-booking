@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绅甲 - 男士美甲美妆服务</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .status-bar {
+            height: 44px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .page {
+            display: none;
+            height: calc(100% - 44px - 80px);
+            overflow-y: auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .header {
+            padding: 20px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .location-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .location-icon {
+            width: 20px;
+            height: 20px;
+            background: #d4af37;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 12px 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #ffffff;
+            width: 100%;
+        }
+
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .service-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4b8 100%);
+            border-radius: 12px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .service-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .service-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #d4af37;
+        }
+
+        .artist-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .artist-card:hover {
+            border-color: #d4af37;
+            transform: translateX(5px);
+        }
+
+        .artist-info {
+            display: flex;
+            gap: 15px;
+        }
+
+        .artist-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4b8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+        }
+
+        .artist-details h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .artist-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .star {
+            color: #d4af37;
+        }
+
+        .artist-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .price {
+            color: #d4af37;
+            font-weight: 700;
+            font-size: 16px;
+            margin-left: auto;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 375px;
+            height: 80px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .nav-item.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            border-radius: 4px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4b8 100%);
+            color: #000000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .order-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .order-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .status-badge {
+            background: #d4af37;
+            color: #000;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .profile-section {
+            padding: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4b8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #000;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* Service Selection Page */
+        .service-detail {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-detail.selected {
+            border-color: #d4af37;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+        }
+
+        .service-detail h3 {
+            margin-bottom: 10px;
+            color: #d4af37;
+        }
+
+        .service-detail p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .service-price {
+            color: #d4af37;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* Back button */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #d4af37;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4b8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #d4af37;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>绅甲</span>
+            <span>100%</span>
+        </div>
+
+        <!-- Home Page -->
+        <div class="page active" id="home">
+            <div class="header">
+                <div class="location-bar">
+                    <div class="location-icon">📍</div>
+                    <span>北京市 朝阳区</span>
+                    <span style="margin-left: auto; color: #d4af37;">切换</span>
+                </div>
+                <input type="text" class="search-bar" placeholder="搜索美甲师或服务...">
+            </div>
+            
+            <div class="content">
+                <div class="service-cards">
+                    <div class="service-card" onclick="showServices('nail')">
+                        <div class="service-icon">💅</div>
+                        <div class="service-title">美甲服务</div>
+                        <div class="service-subtitle">专业男士美甲</div>
+                    </div>
+                    <div class="service-card" onclick="showServices('makeup')">
+                        <div class="service-icon">✨</div>
+                        <div class="service-title">美妆服务</div>
+                        <div class="service-subtitle">商务形象管理</div>
+                    </div>
+                    <div class="service-card" onclick="showServices('skincare')">
+                        <div class="service-icon">🧴</div>
+                        <div class="service-title">护肤护理</div>
+                        <div class="service-subtitle">深度清洁护理</div>
+                    </div>
+                    <div class="service-card" onclick="showServices('package')">
+                        <div class="service-icon">🎁</div>
+                        <div class="service-title">套餐服务</div>
+                        <div class="service-subtitle">优惠组合套餐</div>
+                    </div>
+                </div>
+
+                <div class="section-title">附近推荐美甲师</div>
+                
+                <div class="artist-card" onclick="showArtistDetail('张明')">
+                    <div class="artist-info">
+                        <div class="artist-avatar">张</div>
+                        <div class="artist-details">
+                            <h3>张明</h3>
+                            <div class="artist-rating">
+                                <span class="star">⭐</span>
+                                <span>4.9</span>
+                                <span>(128评价)</span>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="tag">5年经验</span>
+                                <span class="tag">商务风格</span>
+                            </div>
+                        </div>
+                        <div class="price">¥88起</div>
+                    </div>
+                </div>
+
+                <div class="artist-card" onclick="showArtistDetail('李强')">
+                    <div class="artist-info">
+                        <div class="artist-avatar">李</div>
+                        <div class="artist-details">
+                            <h3>李强</h3>
+                            <div class="artist-rating">
+                                <span class="star">⭐</span>
+                                <span>4.8</span>
+                                <span>(96评价)</span>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="tag">3年经验</span>
+                                <span class="tag">时尚潮流</span>
+                            </div>
+                        </div>
+                        <div class="price">¥78起</div>
+                    </div>
+                </div>
+
+                <div class="artist-card" onclick="showArtistDetail('王磊')">
+                    <div class="artist-info">
+                        <div class="artist-avatar">王</div>
+                        <div class="artist-details">
+                            <h3>王磊</h3>
+                            <div class="artist-rating">
+                                <span class="star">⭐</span>
+                                <span>4.7</span>
+                                <span>(203评价)</span>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="tag">7年经验</span>
+                                <span class="tag">精致护理</span>
+                            </div>
+                        </div>
+                        <div class="price">¥98起</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Page -->
+        <div class="page" id="orders">
+            <div class="header">
+                <h2>我的订单</h2>
+            </div>
+            
+            <div class="content">
+                <div class="order-card">
+                    <div class="order-status">
+                        <span>订单号：NO.20241201001</span>
+                        <span class="status-badge">服务中</span>
+                    </div>
+                    <div class="artist-info">
+                        <div class="artist-avatar">张</div>
+                        <div class="artist-details">
+                            <h3>张明 - 美甲服务</h3>
+                            <p>服务时间：今天 14:00-15:30</p>
+                            <p>服务地址：朝阳区国贸SOHO</p>
+                        </div>
+                        <div class="price">¥128</div>
+                    </div>
+                    <button class="btn-primary" onclick="showOrderDetail()">查看详情</button>
+                </div>
+
+                <div class="order-card">
+                    <div class="order-status">
+                        <span>订单号：NO.20241130002</span>
+                        <span class="status-badge" style="background: #666;">已完成</span>
+                    </div>
+                    <div class="artist-info">
+                        <div class="artist-avatar">李</div>
+                        <div class="artist-details">
+                            <h3>李强 - 美妆服务</h3>
+                            <p>服务时间：昨天 10:00-11:00</p>
+                            <p>服务地址：海淀区中关村</p>
+                        </div>
+                        <div class="price">¥158</div>
+                    </div>
+                    <button class="btn-primary" onclick="showReview()">评价服务</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Page -->
+        <div class="page" id="messages">
+            <div class="header">
+                <h2>消息</h2>
+            </div>
+            
+            <div class="content">
+                <div class="artist-card">
+                    <div class="artist-info">
+                        <div class="artist-avatar">张</div>
+                        <div class="artist-details">
+                            <h3>张明</h3>
+                            <p>师傅已出发，预计10分钟到达</p>
+                            <small style="color: #666;">2分钟前</small>
+                        </div>
+                        <div style="color: #d4af37;">●</div>
+                    </div>
+                </div>
+
+                <div class="artist-card">
+                    <div class="artist-info">
+                        <div class="artist-avatar">🔔</div>
+                        <div class="artist-details">
+                            <h3>系统通知</h3>
+                            <p>您的订单已完成，请对服务进行评价</p>
+                            <small style="color: #666;">1小时前</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="artist-card">
+                    <div class="artist-info">
+                        <div class="artist-avatar">李</div>
+                        <div class="artist-details">
+                            <h3>李强</h3>
+                            <p>感谢您的选择，期待下次为您服务！</p>
+                            <small style="color: #666;">昨天</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div class="page" id="profile">
+            <div class="profile-section">
+                <div class="profile-header">
+                    <div class="profile-avatar">陈</div>
+                    <div>
+                        <h2>陈先生</h2>
+                        <p style="color: #666;">VIP会员</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-around; text-align: center;">
+                    <div>
+                        <div style="font-size: 20px; font-weight: bold; color: #d4af37;">12</div>
+                        <div style="font-size: 12px; color: #666;">订单数</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 20px; font-weight: bold; color: #d4af37;">688</div>
+                        <div style="font-size: 12px; color: #666;">积分</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 20px; font-weight: bold; color: #d4af37;">3</div>
+                        <div style="font-size: 12px; color: #666;">优惠券</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="menu-item">
+                    <span>📋 我的订单</span>
+                    <span>></span>
+                </div>
+                <div class="menu-item">
+                    <span>💰 我的钱包</span>
+                    <span>></span>
+                </div>
+                <div class="menu-item">
+                    <span>🎟️ 优惠券</span>
+                    <span>></span>
+                </div>
+                <div class="menu-item">
+                    <span>⭐ 我的评价</span>
+                    <span>></span>
+                </div>
+                <div class="menu-item">
+                    <span>📞 客服中心</span>
+                    <span>></span>
+                </div>
+                <div class="menu-item">
+                    <span>⚙️ 设置</span>
+                    <span>></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Selection Page -->
+        <div class="page" id="service-selection">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <div class="header">
+                <h2 id="service-type-title">美甲服务</h2>
+            </div>
+            
+            <div class="content">
+                <div class="service-detail" onclick="selectService(this)">
+                    <h3>基础美甲</h3>
+                    <p>修甲型、清洁、护理、透明指甲油</p>
+                    <div class="service-price">¥68</div>
+                </div>
+
+                <div class="service-detail" onclick="selectService(this)">
+                    <h3>商务美甲</h3>
+                    <p>精致修型、深度护理、亚光指甲油</p>
+                    <div class="service-price">¥98</div>
+                </div>
+
+                <div class="service-detail" onclick="selectService(this)">
+                    <h3>高级护理美甲</h3>
+                    <p>专业修型、手部护理、营养护理、定制服务</p>
+                    <div class="service-price">¥158</div>
+                </div>
+
+                <button class="btn-primary" onclick="findArtists()">寻找美甲师</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showPage('home')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">首页</div>
+            </div>
+            <div class="nav-item" onclick="showPage('orders')">
+                <div class="nav-icon">📋</div>
+                <div class="nav-label">订单</div>
+            </div>
+            <div class="nav-item" onclick="showPage('messages')">
+                <div class="nav-icon">💬</div>
+                <div class="nav-label">消息</div>
+            </div>
+            <div class="nav-item" onclick="showPage('profile')">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">我的</div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <div class="floating-btn" onclick="quickBook()">+</div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">订单详情</h3>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div id="modal-body">
+                <!-- Modal content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        function showServices(type) {
+            const titles = {
+                'nail': '美甲服务',
+                'makeup': '美妆服务', 
+                'skincare': '护肤护理',
+                'package': '套餐服务'
+            };
+            
+            document.getElementById('service-type-title').textContent = titles[type];
+            
+            // Update service details based on type
+            updateServiceContent(type);
+            
+            showPage('service-selection');
+        }
+
+        function updateServiceContent(type) {
+            const content = document.querySelector('#service-selection .content');
+            const services = {
+                'nail': [
+                    { title: '基础美甲', desc: '修甲型、清洁、护理、透明指甲油', price: '¥68' },
+                    { title: '商务美甲', desc: '精致修型、深度护理、亚光指甲油', price: '¥98' },
+                    { title: '高级护理美甲', desc: '专业修型、手部护理、营养护理、定制服务', price: '¥158' }
+                ],
+                'makeup': [
+                    { title: '商务形象', desc: '专业妆容、面部清洁、定妆服务', price: '¥128' },
+                    { title: '时尚造型', desc: '潮流妆容、眉形设计、整体造型', price: '¥188' },
+                    { title: '特殊场合', desc: '定制妆容、专业造型、全程服务', price: '¥268' }
+                ],
+                'skincare': [
+                    { title: '基础护理', desc: '面部清洁、补水保湿、基础护理', price: '¥88' },
+                    { title: '深度护理', desc: '深层清洁、面膜护理、精华导入', price: '¥158' },
+                    { title: '专业SPA', desc: '全套护理、专业仪器、个性定制', price: '¥288' }
+                ],
+                'package': [
+                    { title: '商务套餐', desc: '美甲+护肤+形象设计', price: '¥198' },
+                    { title: '时尚套餐', desc: '美甲+美妆+造型设计', price: '¥268' },
+                    { title: '尊享套餐', desc: '全项目服务+专属定制', price: '¥398' }
+                ]
+            };
+
+            let html = '';
+            services[type].forEach(service => {
+                html += `
+                    <div class="service-detail" onclick="selectService(this)">
+                        <h3>${service.title}</h3>
+                        <p>${service.desc}</p>
+                        <div class="service-price">${service.price}</div>
+                    </div>
+                `;
+            });
+            html += '<button class="btn-primary" onclick="findArtists()">寻找美甲师</button>';
+            
+            content.innerHTML = html;
+        }
+
+        function selectService(element) {
+            document.querySelectorAll('.service-detail').forEach(item => {
+                item.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function findArtists() {
+            showModal('寻找美甲师', `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">🔍</div>
+                    <h3>正在为您匹配合适的美甲师...</h3>
+                    <p style="color: #666; margin: 20px 0;">根据您的位置和需求，我们正在寻找最佳人选</p>
+                    <div style="display: flex; justify-content: center; gap: 10px; margin: 20px 0;">
+                        <div style="width: 8px; height: 8px; background: #d4af37; border-radius: 50%; animation: pulse 1s infinite;"></div>
+                        <div style="width: 8px; height: 8px; background: #d4af37; border-radius: 50%; animation: pulse 1s infinite 0.2s;"></div>
+                        <div style="width: 8px; height: 8px; background: #d4af37; border-radius: 50%; animation: pulse 1s infinite 0.4s;"></div>
+                    </div>
+                </div>
+                <style>
+                    @keyframes pulse {
+                        0%, 50%, 100% { opacity: 0.3; }
+                        25% { opacity: 1; }
+                    }
+                </style>
+            `);
+            
+            setTimeout(() => {
+                closeModal();
+                showArtistList();
+            }, 3000);
+        }
+
+        function showArtistList() {
+            showModal('可用美甲师', `
+                <div class="artist-card" onclick="bookArtist('张明')">
+                    <div class="artist-info">
+                        <div class="artist-avatar">张</div>
+                        <div class="artist-details">
+                            <h3>张明</h3>
+                            <div class="artist-rating">
+                                <span class="star">⭐</span>
+                                <span>4.9</span>
+                                <span>(128评价)</span>
+                            </div>
+                            <p>距离您 0.8km · 预计10分钟到达</p>
+                        </div>
+                        <div class="price">¥98</div>
+                    </div>
+                </div>
+                <div class="artist-card" onclick="bookArtist('李强')">
+                    <div class="artist-info">
+                        <div class="artist-avatar">李</div>
+                        <div class="artist-details">
+                            <h3>李强</h3>
+                            <div class="artist-rating">
+                                <span class="star">⭐</span>
+                                <span>4.8</span>
+                                <span>(96评价)</span>
+                            </div>
+                            <p>距离您 1.2km · 预计15分钟到达</p>
+                        </div>
+                        <div class="price">¥98</div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function bookArtist(name) {
+            closeModal();
+            showModal('确认订单', `
+                <div style="padding: 20px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div class="artist-avatar" style="margin: 0 auto 10px;">${name[0]}</div>
+                        <h3>${name}</h3>
+                        <p>商务美甲服务</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>服务费用</span>
+                            <span>¥98</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>平台服务费</span>
+                            <span>¥5</span>
+                        </div>
+                        <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0;">
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; color: #d4af37;">
+                            <span>总计</span>
+                            <span>¥103</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="confirmOrder()">确认下单</button>
+                </div>
+            `);
+        }
+
+        function confirmOrder() {
+            closeModal();
+            showModal('订单已确认', `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">✅</div>
+                    <h3>订单创建成功！</h3>
+                    <p style="color: #666; margin: 20px 0;">美甲师正在前往您的位置<br/>订单号：NO.20241201003</p>
+                    <button class="btn-primary" onclick="closeModal(); showPage('orders');">查看订单</button>
+                </div>
+            `);
+        }
+
+        function showArtistDetail(name) {
+            showModal(name + ' - 详细信息', `
+                <div style="padding: 20px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div class="artist-avatar" style="margin: 0 auto 10px;">${name[0]}</div>
+                        <h3>${name}</h3>
+                        <div class="artist-rating" style="justify-content: center;">
+                            <span class="star">⭐</span>
+                            <span>4.9</span>
+                            <span>(128评价)</span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 10px; color: #d4af37;">专业技能</h4>
+                        <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 15px;">
+                            <span class="tag">商务美甲</span>
+                            <span class="tag">护手护理</span>
+                            <span class="tag">时尚造型</span>
+                        </div>
+                        <h4 style="margin-bottom: 10px; color: #d4af37;">服务介绍</h4>
+                        <p style="color: #ccc; line-height: 1.5;">5年专业经验，擅长商务风格美甲设计，注重细节和品质，为男士打造专业形象。</p>
+                    </div>
+                    <button class="btn-primary" onclick="selectArtist('${name}')">选择该美甲师</button>
+                </div>
+            `);
+        }
+
+        function selectArtist(name) {
+            closeModal();
+            showServices('nail');
+        }
+
+        function showOrderDetail() {
+            showModal('订单详情', `
+                <div style="padding: 20px;">
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #d4af37;">订单信息</h4>
+                        <p>订单号：NO.20241201001</p>
+                        <p>状态：服务中</p>
+                        <p>下单时间：2024-12-01 13:30</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #d4af37;">服务信息</h4>
+                        <p>服务项目：商务美甲</p>
+                        <p>美甲师：张明</p>
+                        <p>服务时间：14:00-15:30</p>
+                        <p>服务地址：朝阳区国贸SOHO</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #d4af37;">费用明细</h4>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>服务费用</span>
+                            <span>¥98</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>平台服务费</span>
+                            <span>¥5</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; color: #d4af37;">
+                            <span>总计</span>
+                            <span>¥103</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="contactArtist()">联系美甲师</button>
+                </div>
+            `);
+        }
+
+        function showReview() {
+            showModal('服务评价', `
+                <div style="padding: 20px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 15px;">请为本次服务评分</h4>
+                        <div style="font-size: 30px; margin-bottom: 15px;">
+                            <span onclick="setRating(1)">⭐</span>
+                            <span onclick="setRating(2)">⭐</span>
+                            <span onclick="setRating(3)">⭐</span>
+                            <span onclick="setRating(4)">⭐</span>
+                            <span onclick="setRating(5)">⭐</span>
+                        </div>
+                    </div>
+                    <textarea placeholder="分享您的服务体验..." style="width: 100%; height: 100px; background: rgba(255,255,255,0.1); border: 1px solid rgba(212,175,55,0.3); border-radius: 10px; padding: 10px; color: white; resize: none;" maxlength="200"></textarea>
+                    <button class="btn-primary" onclick="submitReview()">提交评价</button>
+                </div>
+            `);
+        }
+
+        function submitReview() {
+            closeModal();
+            showModal('评价成功', `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">✅</div>
+                    <h3>感谢您的评价！</h3>
+                    <p style="color: #666; margin: 20px 0;">您的反馈对我们很重要</p>
+                    <button class="btn-primary" onclick="closeModal()">确定</button>
+                </div>
+            `);
+        }
+
+        function contactArtist() {
+            closeModal();
+            showModal('联系美甲师', `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">📞</div>
+                    <h3>联系张明</h3>
+                    <p style="color: #666; margin: 20px 0;">您可以通过以下方式联系美甲师</p>
+                    <button class="btn-primary" style="margin-bottom: 10px;" onclick="makeCall()">📞 拨打电话</button>
+                    <button class="btn-primary" onclick="sendMessage()">💬 发送消息</button>
+                </div>
+            `);
+        }
+
+        function makeCall() {
+            alert('正在拨打电话...');
+            closeModal();
+        }
+
+        function sendMessage() {
+            closeModal();
+            showPage('messages');
+        }
+
+        function quickBook() {
+            showModal('快速预约', `
+                <div style="padding: 20px;">
+                    <h4 style="margin-bottom: 20px; text-align: center;">选择服务类型</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="service-card" onclick="quickBookService('nail')">
+                            <div class="service-icon">💅</div>
+                            <div class="service-title">美甲</div>
+                        </div>
+                        <div class="service-card" onclick="quickBookService('makeup')">
+                            <div class="service-icon">✨</div>
+                            <div class="service-title">美妆</div>
+                        </div>
+                        <div class="service-card" onclick="quickBookService('skincare')">
+                            <div class="service-icon">🧴</div>
+                            <div class="service-title">护肤</div>
+                        </div>
+                        <div class="service-card" onclick="quickBookService('package')">
+                            <div class="service-icon">🎁</div>
+                            <div class="service-title">套餐</div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function quickBookService(type) {
+            closeModal();
+            showServices(type);
+        }
+
+        function goBack() {
+            showPage('home');
+        }
+
+        function showModal(title, content) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
