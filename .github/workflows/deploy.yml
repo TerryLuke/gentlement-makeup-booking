@@ -1,0 +1,155 @@
+name: Deploy to GitHub Pages
+
+on:
+  # 在推送到main分支时触发
+  push:
+    branches: [ main ]
+  
+  # 允许手动触发工作流
+  workflow_dispatch:
+
+# 设置权限以允许部署到GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 确保只有一个部署作业同时运行
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # 构建作业
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Copy prototype files to root
+        run: |
+          # 将prototype-v2目录下的文件复制到根目录
+          cp -r prototype-v2/* .
+          
+          # 确保index.html存在作为主页
+          if [ ! -f "index.html" ]; then
+            echo "Error: index.html not found!"
+            exit 1
+          fi
+          
+          # 创建一个简单的导航页面，如果需要的话
+          cat > nav.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>绅甲 - 项目导航</title>
+              <style>
+                  body {
+                      font-family: 'Arial', sans-serif;
+                      background: linear-gradient(135deg, #000000, #1a1a1a);
+                      color: #ffffff;
+                      margin: 0;
+                      padding: 40px 20px;
+                      min-height: 100vh;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                  }
+                  .container {
+                      max-width: 800px;
+                      text-align: center;
+                  }
+                  .title {
+                      font-size: 3rem;
+                      font-weight: bold;
+                      margin-bottom: 1rem;
+                      background: linear-gradient(45deg, #d4af37, #ffd700);
+                      -webkit-background-clip: text;
+                      -webkit-text-fill-color: transparent;
+                      background-clip: text;
+                  }
+                  .subtitle {
+                      font-size: 1.2rem;
+                      color: #cccccc;
+                      margin-bottom: 3rem;
+                  }
+                  .nav-grid {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                      gap: 2rem;
+                      margin-top: 2rem;
+                  }
+                  .nav-card {
+                      background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+                      border: 1px solid #d4af37;
+                      border-radius: 15px;
+                      padding: 2rem;
+                      text-decoration: none;
+                      color: inherit;
+                      transition: all 0.3s ease;
+                      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                  }
+                  .nav-card:hover {
+                      transform: translateY(-5px);
+                      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+                      border-color: #ffd700;
+                  }
+                  .nav-card h3 {
+                      color: #d4af37;
+                      margin-top: 0;
+                      font-size: 1.5rem;
+                  }
+                  .nav-card p {
+                      color: #cccccc;
+                      line-height: 1.6;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1 class="title">绅甲</h1>
+                  <p class="subtitle">男士美甲美妆服务平台 - 项目原型展示</p>
+                  
+                  <div class="nav-grid">
+                      <a href="index.html" class="nav-card">
+                          <h3>📱 用户端小程序</h3>
+                          <p>体验完整的用户预约流程，包括服务选择、美甲师匹配、订单管理和评价系统</p>
+                      </a>
+                      
+                      <a href="artist-app.html" class="nav-card">
+                          <h3>👨‍💼 美甲师工作台</h3>
+                          <p>美甲师专用应用，管理订单、查看收入统计、处理客户服务流程</p>
+                      </a>
+                      
+                      <a href="admin-dashboard.html" class="nav-card">
+                          <h3>🎛️ 管理后台</h3>
+                          <p>平台管理系统，监控运营数据、管理用户和美甲师、处理财务统计</p>
+                      </a>
+                  </div>
+              </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+  # 部署作业
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
